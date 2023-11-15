@@ -17,11 +17,10 @@ public interface VanEventBus<C, R> {
 
     void push(final Msg<C, R> msg, final Consumer<R> call);
 
-    void consumer(final Object topic, Handler<C, R> handler);
+    void consumer(final Object topic, final Handler<C, R> handler);
 
-    default void consumer(Class<C> clazz, Handler<C, R> handler) {
+    default void consumer(final Class clazz, final Handler<C, R> handler) {
         consumer(clazz.getName(), handler);
     }
-
 
 }
