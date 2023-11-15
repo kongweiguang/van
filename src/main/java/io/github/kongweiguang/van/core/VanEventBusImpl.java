@@ -6,8 +6,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+/**
+ * VanEventBusImpl
+ *
+ * @param <C>
+ * @param <R>
+ * @author kongweiguang
+ */
 public class VanEventBusImpl<C, R> implements VanEventBus<C, R> {
-    private final Map<Object, List<Handler<C, R>>> router = new HashMap<>();
+    private final Map<String, List<Handler<C, R>>> router = new HashMap<>();
 
     @Override
     public void push(final Msg<C, R> msg, final Consumer<R> call) {
@@ -15,9 +22,13 @@ public class VanEventBusImpl<C, R> implements VanEventBus<C, R> {
         router.computeIfAbsent(msg.topic(), k -> new ArrayList<>()).forEach(e -> e.handle(msg));
     }
 
+    @Override
+    public synchronized void consumer(final String topic, final Handler<C, R> handler) {
+        router.computeIfAbsent(topic, k -> new ArrayList<>()).add(handler);
+    }
 
     @Override
-    public void consumer(final Object topic, final Handler<C, R> handler) {
-        router.computeIfAbsent(topic, k -> new ArrayList<>()).add(handler);
+    public void remove(final String topic) {
+        router.remove(topic);
     }
 }

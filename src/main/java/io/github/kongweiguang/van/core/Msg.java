@@ -10,6 +10,7 @@ import static java.util.Objects.nonNull;
  *
  * @param <C> 消息的内容
  * @param <R> 消息返回的结果
+ * @author kongweiguang
  */
 public class Msg<C, R> {
     private final long id;

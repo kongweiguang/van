@@ -1,3 +1,5 @@
+package io.github.kongweiguang.van.test;
+
 import java.util.Arrays;
 import java.util.StringJoiner;
 

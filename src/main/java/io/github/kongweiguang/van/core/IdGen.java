@@ -4,9 +4,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * id生成器
+ *
+ * @author kongweiguang
+ */
 public final class IdGen {
     public static final IdGen of = new IdGen(1);
-
     private long base;
     private final AtomicLong add = new AtomicLong();
 
@@ -15,8 +19,8 @@ public final class IdGen {
 
         Executors.newSingleThreadScheduledExecutor(IdGen::newThread)
                 .scheduleAtFixedRate(() -> {
-                            base = (System.currentTimeMillis() / 1000) * 1_000_000_000;
-                            add.set(0);
+                            this.base = (System.currentTimeMillis() >> 10) << 30;
+                            this.add.set(0);
                         },
                         period,
                         period,
@@ -31,6 +35,11 @@ public final class IdGen {
         return t;
     }
 
+    /**
+     * 生成id
+     *
+     * @return id
+     */
     public long next() {
         return base + add.incrementAndGet();
     }

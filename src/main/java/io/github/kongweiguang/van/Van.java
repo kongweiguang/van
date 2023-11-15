@@ -5,6 +5,8 @@ import io.github.kongweiguang.van.core.VanEventBusImpl;
 
 /**
  * 本地eventBus
+ *
+ * @author kongweiguang
  */
 public class Van {
     private static final VanEventBus bus = new VanEventBusImpl<>();
