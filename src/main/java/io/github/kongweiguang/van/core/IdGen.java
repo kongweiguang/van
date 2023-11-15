@@ -10,27 +10,30 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author kongweiguang
  */
 public final class IdGen {
-    public static final IdGen of = new IdGen(1);
-    private long base;
+    public static final IdGen of = of(1);
+    private long base = (System.currentTimeMillis() >> 10) << 30;
     private final AtomicLong add = new AtomicLong();
 
-    private IdGen(int period) {
-        this.base = System.currentTimeMillis() / 1000;
-
-        Executors.newSingleThreadScheduledExecutor(IdGen::newThread)
-                .scheduleAtFixedRate(() -> {
-                            this.base = (System.currentTimeMillis() >> 10) << 30;
-                            this.add.set(0);
-                        },
-                        period,
-                        period,
-                        TimeUnit.MILLISECONDS
-                );
+    private IdGen(final int period) {
+        scheduleTask(period);
     }
 
-    private static Thread newThread(Runnable f) {
-        final Thread t = new Thread();
-        t.setName("IdGen");
+    public static IdGen of(final int period) {
+        return new IdGen(period);
+    }
+
+    private void scheduleTask(long period) {
+        Executors.newSingleThreadScheduledExecutor(IdGen::newThread)
+                .scheduleAtFixedRate(this::updateBaseAndResetAdd, 0, period, TimeUnit.SECONDS);
+    }
+
+    private void updateBaseAndResetAdd() {
+        this.base = (System.currentTimeMillis() >> 10) << 30;
+        this.add.set(0);
+    }
+
+    private static Thread newThread(Runnable r) {
+        final Thread t = new Thread(r, "idGen");
         t.setDaemon(true);
         return t;
     }
