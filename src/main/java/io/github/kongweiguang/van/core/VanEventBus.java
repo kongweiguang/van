@@ -69,29 +69,29 @@ public interface VanEventBus<C, R> {
     void push(final Msg<C, R> msg, final Consumer<R> call);
 
     /**
-     * 消费指定的实体类型的消息
+     * 拉取指定的实体类型的消息
      *
      * @param clazz   实体类型
      * @param handler 处理器
      */
-    default void consumer(final Class<?> clazz, final Handler<C, R> handler) {
-        consumer(clazz.getName(), handler);
+    default void pull(final Class<?> clazz, final Handler<C, R> handler) {
+        pull(clazz.getName(), handler);
     }
 
     /**
-     * 消费指定的topic
+     * 拉取指定的topic
      *
      * @param topic   主题
      * @param handler 处理器
      */
-    void consumer(final String topic, final Handler<C, R> handler);
+    void pull(final String topic, final Handler<C, R> handler);
 
     /**
-     * 可以将类中加了{@link Pull}注解的方法的注册到消费者中
+     * 拉取类中加了{@link Pull}注解的方法，并执行
      *
      * @param obj 含有{@link Pull}注解的类实例
      */
-    void register(final Object obj);
+    void pull(final Object obj);
 
     /**
      * 移除topic下指定名称的消费者

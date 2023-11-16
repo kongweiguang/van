@@ -56,12 +56,21 @@ public final class Msg<C, R> {
     }
 
     /**
+     * 判断是否有回调
+     *
+     * @return 是否有回调
+     */
+    public boolean hasCallBack() {
+        return nonNull(call);
+    }
+
+    /**
      * 触发调用者的回调
      *
      * @param r 回调参数
      */
     public void reply(R r) {
-        if (nonNull(call)) {
+        if (hasCallBack()) {
             call.accept(r);
         }
     }
@@ -88,7 +97,7 @@ public final class Msg<C, R> {
      * @param v 值
      * @return this
      */
-    public Msg<C, R> setAttr(final Object k, final Object v) {
+    public Msg<C, R> attr(final Object k, final Object v) {
         if (isNull(attr)) {
             this.attr = new HashMap<>();
         }
@@ -112,7 +121,7 @@ public final class Msg<C, R> {
                 .add("id=" + id)
                 .add("topic='" + topic + "'")
                 .add("content=" + content)
-                .add("call=" + call)
+                .add("attr=" + attr)
                 .toString();
     }
 }

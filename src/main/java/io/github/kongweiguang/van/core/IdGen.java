@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public final class IdGen {
     public static final IdGen of = of(Duration.ofSeconds(1));
-    private final AtomicLong add = new AtomicLong();
+    private final AtomicLong add = new AtomicLong(System.currentTimeMillis() << 25);
 
     private IdGen(final Duration period) {
         scheduleTask(period);

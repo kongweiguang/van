@@ -1,6 +1,7 @@
-package io.github.kongweiguang.van.test;
+package io.github.kongweiguang.van.test.push_obj_method;
 
 import io.github.kongweiguang.van.core.Pull;
+import io.github.kongweiguang.van.test.metedata.User;
 
 public class MyHandler {
     @Pull

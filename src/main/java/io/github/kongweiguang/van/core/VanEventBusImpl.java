@@ -28,7 +28,7 @@ public final class VanEventBusImpl<C, R> implements VanEventBus<C, R> {
     }
 
     @Override
-    public synchronized void consumer(final String topic, final Handler<C, R> handler) {
+    public synchronized void pull(final String topic, final Handler<C, R> handler) {
         router.computeIfAbsent(topic, k -> new ArrayList<>()).add(handler);
     }
 
@@ -38,7 +38,7 @@ public final class VanEventBusImpl<C, R> implements VanEventBus<C, R> {
     }
 
     @Override
-    public void register(final Object obj) {
+    public void pull(final Object obj) {
         for (Class<?> c = obj.getClass(); c != null; c = c.getSuperclass()) {
 
             for (Method m : c.getDeclaredMethods()) {
@@ -52,7 +52,7 @@ public final class VanEventBusImpl<C, R> implements VanEventBus<C, R> {
                     }
 
                     m.setAccessible(true);
-                    consumer(sub.value().isEmpty() ? params[0].getName() : sub.value(), hd(obj, params.length, m));
+                    pull(sub.value().isEmpty() ? params[0].getName() : sub.value(), hd(obj, params.length, m));
                 }
             }
 

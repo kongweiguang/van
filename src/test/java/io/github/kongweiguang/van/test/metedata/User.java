@@ -1,4 +1,4 @@
-package io.github.kongweiguang.van.test;
+package io.github.kongweiguang.van.test.metedata;
 
 import java.util.Arrays;
 import java.util.StringJoiner;
