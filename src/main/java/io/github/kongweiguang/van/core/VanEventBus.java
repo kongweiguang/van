@@ -1,7 +1,5 @@
 package io.github.kongweiguang.van.core;
 
-import java.util.function.Consumer;
-
 /**
  * eventbus
  *
@@ -34,7 +32,7 @@ public interface VanEventBus<C, R> {
      * @param c    消息
      * @param call 回调
      */
-    default void push(final C c, final Consumer<R> call) {
+    default void push(final C c, final java.util.function.Consumer<R> call) {
         push(MsgFactory.of(c.getClass().getName(), c), call);
     }
 
@@ -44,7 +42,7 @@ public interface VanEventBus<C, R> {
      * @param msg  消息
      * @param call 回调
      */
-    void push(final Msg<C, R> msg, final Consumer<R> call);
+    void push(final Msg<C, R> msg, final java.util.function.Consumer<R> call);
 
     /**
      * 消费指定的topic
@@ -65,9 +63,17 @@ public interface VanEventBus<C, R> {
     }
 
     /**
-     * 移除topic消费者
+     * 将类示例填入，可以将类中加了{@link Consumer}注解的方法的注册到消费者中
+     *
+     * @param obj 含有{@link Consumer}注解的类实例
+     */
+    void register(Object obj);
+
+    /**
+     * 移除topic下指定名称的消费者
      *
      * @param topic 主题
+     * @param name  处理器的名字
      */
-    void remove(final String topic);
+    void remove(final String topic, final String name);
 }

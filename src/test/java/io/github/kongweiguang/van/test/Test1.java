@@ -1,20 +1,22 @@
 package io.github.kongweiguang.van.test;
 
-import io.github.kongweiguang.van.core.IdGen;
+import io.github.kongweiguang.van.Van;
+import io.github.kongweiguang.van.core.MsgFactory;
 
-import java.util.IdentityHashMap;
+import java.util.function.Consumer;
 
 public class Test1 {
     public static void main(String[] args) {
-        final long start = System.currentTimeMillis();
+        Van.bus().register(new MyHandler());
 
-        for (int i = 0; i <500_000_000L; i++) {
-//            IdGen.of.next();
 
-        System.out.println(IdGen.of.next());
-        }
-        final long end = System.currentTimeMillis();
-        System.out.println("use time -> " + (end - start) + "ms");
-
+        Van.bus().push(MsgFactory.of("bala", new User(1, "k", new String[]{"h"})), new Consumer<Object>() {
+            @Override
+            public void accept(final Object object) {
+                System.out.println("object = " + object);
+            }
+        });
     }
+
+
 }
