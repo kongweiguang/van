@@ -2,6 +2,7 @@ package io.github.kongweiguang.van.core;
 
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * VanEventBusImpl
@@ -10,11 +11,11 @@ import java.util.*;
  * @param <R>
  * @author kongweiguang
  */
-public class VanEventBusImpl<C, R> implements VanEventBus<C, R> {
-    private final Map<String, List<Handler<C, R>>> router = new HashMap<>();
+public final class VanEventBusImpl<C, R> implements VanEventBus<C, R> {
+    private final Map<String, List<Handler<C, R>>> router = new LinkedHashMap<>();
 
     @Override
-    public void push(final Msg<C, R> msg, final java.util.function.Consumer<R> call) {
+    public void push(final Msg<C, R> msg, final Consumer<R> call) {
         msg.callback(call);
 
         router.computeIfAbsent(msg.topic(), k -> new ArrayList<>()).forEach(h -> {
@@ -32,7 +33,7 @@ public class VanEventBusImpl<C, R> implements VanEventBus<C, R> {
     }
 
     @Override
-    public void remove(final String topic, final String name) {
+    public synchronized void remove(final String topic, final String name) {
         router.computeIfAbsent(topic, k -> new ArrayList<>()).removeIf(e -> Objects.equals(e.name(), name));
     }
 
@@ -41,7 +42,7 @@ public class VanEventBusImpl<C, R> implements VanEventBus<C, R> {
         for (Class<?> c = obj.getClass(); c != null; c = c.getSuperclass()) {
 
             for (Method m : c.getDeclaredMethods()) {
-                Consumer sub = m.getAnnotation(Consumer.class);
+                Pull sub = m.getAnnotation(Pull.class);
 
                 if (sub != null) {
 
@@ -51,18 +52,18 @@ public class VanEventBusImpl<C, R> implements VanEventBus<C, R> {
                     }
 
                     m.setAccessible(true);
-                    consumer(sub.value().isEmpty() ? params[0].getName() : sub.value(), hd(obj, params, m));
+                    consumer(sub.value().isEmpty() ? params[0].getName() : sub.value(), hd(obj, params.length, m));
                 }
             }
 
         }
     }
 
-    private Handler<C, R> hd(final Object obj, final Class<?>[] params, final Method m) {
+    private Handler<C, R> hd(final Object obj, final int size, final Method m) {
         return msg -> {
             final Object fr;
 
-            if (params.length == 1) {
+            if (size == 1) {
                 fr = m.invoke(obj, msg.content());
             } else {
                 fr = m.invoke(obj);

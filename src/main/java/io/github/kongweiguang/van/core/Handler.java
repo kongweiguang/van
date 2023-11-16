@@ -9,9 +9,20 @@ package io.github.kongweiguang.van.core;
  */
 @FunctionalInterface
 public interface Handler<C, R> {
+    /**
+     * 处理器昵称
+     *
+     * @return 昵称
+     */
     default String name() {
         return null;
     }
 
+    /**
+     * 处理消息
+     *
+     * @param msg 消息
+     * @throws Exception 异常
+     */
     void handle(Msg<C, R> msg) throws Exception;
 }

@@ -1,5 +1,6 @@
 package io.github.kongweiguang.van.core;
 
+import java.time.Duration;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
@@ -10,29 +11,27 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author kongweiguang
  */
 public final class IdGen {
-    public static final IdGen of = of(1);
-    private long base = (System.currentTimeMillis() >> 10) << 30;
+    public static final IdGen of = of(Duration.ofSeconds(1));
     private final AtomicLong add = new AtomicLong();
 
-    private IdGen(final int period) {
+    private IdGen(final Duration period) {
         scheduleTask(period);
     }
 
-    public static IdGen of(final int period) {
+    public static IdGen of(final Duration period) {
         return new IdGen(period);
     }
 
-    private void scheduleTask(long period) {
+    private void scheduleTask(final Duration period) {
         Executors.newSingleThreadScheduledExecutor(IdGen::newThread)
-                .scheduleAtFixedRate(this::updateBaseAndResetAdd, 0, period, TimeUnit.SECONDS);
+                .scheduleAtFixedRate(this::updateBaseAndResetAdd, period.toMillis(), period.toMillis(), TimeUnit.MILLISECONDS);
     }
 
     private void updateBaseAndResetAdd() {
-        this.base = (System.currentTimeMillis() >> 10) << 30;
-        this.add.set(0);
+        this.add.set(System.currentTimeMillis() << 25);
     }
 
-    private static Thread newThread(Runnable r) {
+    private static Thread newThread(final Runnable r) {
         final Thread t = new Thread(r, "idGen");
         t.setDaemon(true);
         return t;
@@ -44,6 +43,7 @@ public final class IdGen {
      * @return id
      */
     public long next() {
-        return base + add.incrementAndGet();
+        return add.incrementAndGet();
     }
+
 }

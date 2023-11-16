@@ -1,5 +1,7 @@
 package io.github.kongweiguang.van.core;
 
+import java.util.function.Consumer;
+
 /**
  * eventbus
  *
@@ -8,14 +10,6 @@ package io.github.kongweiguang.van.core;
  * @author kongweiguang
  */
 public interface VanEventBus<C, R> {
-    /**
-     * 推送消息
-     *
-     * @param msg 消息
-     */
-    default void push(final Msg<C, R> msg) {
-        push(msg, null);
-    }
 
     /**
      * 推送实体类消息
@@ -32,8 +26,38 @@ public interface VanEventBus<C, R> {
      * @param c    消息
      * @param call 回调
      */
-    default void push(final C c, final java.util.function.Consumer<R> call) {
+    default void push(final C c, final Consumer<R> call) {
         push(MsgFactory.of(c.getClass().getName(), c), call);
+    }
+
+    /**
+     * 推送消息
+     *
+     * @param topic 主题
+     * @param c     消息
+     */
+    default void push(final String topic, final C c) {
+        push(MsgFactory.of(topic, c), null);
+    }
+
+    /**
+     * 推送消息，设置回调
+     *
+     * @param topic 主题
+     * @param c     消息
+     * @param call  回调
+     */
+    default void push(final String topic, final C c, final Consumer<R> call) {
+        push(MsgFactory.of(topic, c), call);
+    }
+
+    /**
+     * 推送消息
+     *
+     * @param msg 消息
+     */
+    default void push(final Msg<C, R> msg) {
+        push(msg, null);
     }
 
     /**
@@ -42,15 +66,7 @@ public interface VanEventBus<C, R> {
      * @param msg  消息
      * @param call 回调
      */
-    void push(final Msg<C, R> msg, final java.util.function.Consumer<R> call);
-
-    /**
-     * 消费指定的topic
-     *
-     * @param topic   主题
-     * @param handler 处理器
-     */
-    void consumer(final String topic, final Handler<C, R> handler);
+    void push(final Msg<C, R> msg, final Consumer<R> call);
 
     /**
      * 消费指定的实体类型的消息
@@ -63,11 +79,19 @@ public interface VanEventBus<C, R> {
     }
 
     /**
-     * 将类示例填入，可以将类中加了{@link Consumer}注解的方法的注册到消费者中
+     * 消费指定的topic
      *
-     * @param obj 含有{@link Consumer}注解的类实例
+     * @param topic   主题
+     * @param handler 处理器
      */
-    void register(Object obj);
+    void consumer(final String topic, final Handler<C, R> handler);
+
+    /**
+     * 可以将类中加了{@link Pull}注解的方法的注册到消费者中
+     *
+     * @param obj 含有{@link Pull}注解的类实例
+     */
+    void register(final Object obj);
 
     /**
      * 移除topic下指定名称的消费者
