@@ -4,6 +4,8 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Consumer;
 
+import static java.util.Optional.ofNullable;
+
 /**
  * VanEventBusImpl
  *
@@ -18,13 +20,14 @@ public final class VanBusImpl<C, R> implements VanBus<C, R> {
     public void push(final Msg<C, R> msg, final Consumer<R> call) {
         msg.callback(call);
 
-        for (Handler<C, R> h : router.computeIfAbsent(msg.topic(), k -> new ArrayList<>())) {
+        ofNullable(router.get(msg.topic())).ifPresent(hs -> hs.forEach(h -> {
             try {
                 h.handle(msg);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
-        }
+        }));
+
     }
 
     @Override
@@ -34,7 +37,7 @@ public final class VanBusImpl<C, R> implements VanBus<C, R> {
 
     @Override
     public synchronized void remove(final String topic, final String name) {
-        router.computeIfAbsent(topic, k -> new ArrayList<>()).removeIf(e -> Objects.equals(e.name(), name));
+        ofNullable(router.get(topic)).ifPresent(h -> h.removeIf(e -> Objects.equals(e.name(), name)));
     }
 
     @Override
