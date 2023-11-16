@@ -11,7 +11,7 @@ import java.util.function.Consumer;
  * @param <R>
  * @author kongweiguang
  */
-public final class VanEventBusImpl<C, R> implements VanEventBus<C, R> {
+public final class VanBusImpl<C, R> implements VanBus<C, R> {
     private final Map<String, List<Handler<C, R>>> router = new LinkedHashMap<>();
 
     @Override

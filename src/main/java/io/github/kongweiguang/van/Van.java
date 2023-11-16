@@ -1,7 +1,7 @@
 package io.github.kongweiguang.van;
 
-import io.github.kongweiguang.van.core.VanEventBus;
-import io.github.kongweiguang.van.core.VanEventBusImpl;
+import io.github.kongweiguang.van.core.VanBus;
+import io.github.kongweiguang.van.core.VanBusImpl;
 
 /**
  * 本地eventBus
@@ -9,9 +9,9 @@ import io.github.kongweiguang.van.core.VanEventBusImpl;
  * @author kongweiguang
  */
 public final class Van {
-    private static final VanEventBus bus = new VanEventBusImpl<>();
+    private static final VanBus bus = new VanBusImpl<>();
 
-    public static <C, R> VanEventBus<C, R> bus() {
+    public static <C, R> VanBus<C, R> bus() {
         return bus;
     }
 

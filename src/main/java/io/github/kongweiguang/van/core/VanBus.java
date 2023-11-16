@@ -9,7 +9,7 @@ import java.util.function.Consumer;
  * @param <R> 返回类型
  * @author kongweiguang
  */
-public interface VanEventBus<C, R> {
+public interface VanBus<C, R> {
 
     /**
      * 推送实体类消息
