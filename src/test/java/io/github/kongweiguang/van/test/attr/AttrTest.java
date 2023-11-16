@@ -1,7 +1,7 @@
 package io.github.kongweiguang.van.test.attr;
 
 import io.github.kongweiguang.van.Van;
-import io.github.kongweiguang.van.core.MsgFactory;
+import io.github.kongweiguang.van.core.Msg;
 import org.junit.jupiter.api.Test;
 
 public class AttrTest {
@@ -13,6 +13,6 @@ public class AttrTest {
         Van.<String, String>bus().pull(topic, System.out::println);
 
         //推送消息
-        Van.<String, Void>bus().push(MsgFactory.<String, Void>of(topic, "content").attr("k", "v"));
+        Van.<String, Void>bus().push(Msg.<String, Void>of(topic, "content").attr("k", "v"));
     }
 }

@@ -17,7 +17,7 @@ public interface VanBus<C, R> {
      * @param c 实体类
      */
     default void push(final C c) {
-        push(MsgFactory.of(c.getClass().getName(), c), null);
+        push(Msg.of(c.getClass().getName(), c), null);
     }
 
     /**
@@ -27,7 +27,7 @@ public interface VanBus<C, R> {
      * @param call 回调
      */
     default void push(final C c, final Consumer<R> call) {
-        push(MsgFactory.of(c.getClass().getName(), c), call);
+        push(Msg.of(c.getClass().getName(), c), call);
     }
 
     /**
@@ -37,7 +37,7 @@ public interface VanBus<C, R> {
      * @param c     消息
      */
     default void push(final String topic, final C c) {
-        push(MsgFactory.of(topic, c), null);
+        push(Msg.of(topic, c), null);
     }
 
     /**
@@ -48,7 +48,7 @@ public interface VanBus<C, R> {
      * @param call  回调
      */
     default void push(final String topic, final C c, final Consumer<R> call) {
-        push(MsgFactory.of(topic, c), call);
+        push(Msg.of(topic, c), call);
     }
 
     /**

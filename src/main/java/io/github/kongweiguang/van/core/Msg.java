@@ -22,10 +22,18 @@ public final class Msg<C, R> {
     private Consumer<R> call;
     private Map<Object, Object> attr;
 
-    public Msg(final long id, final String topic, final C content) {
+    private Msg(final long id, final String topic, final C content) {
         this.id = id;
         this.topic = topic;
         this.content = content;
+    }
+
+    public static <C, R> Msg<C, R> of(final String topic, final C c) {
+        return new Msg<>(IdGen.of.next(), topic, c);
+    }
+
+    public static <C, R> Msg<C, R> of(final long id, final String topic, final C c) {
+        return new Msg<>(id, topic, c);
     }
 
     /**
