@@ -8,7 +8,7 @@ public class PushTopicTest {
     String topic = "topic.test1";
 
     @Test
-    void test1() throws Exception {
+    void test() throws Exception {
         //拉取消息
         Van.bus().pull(topic, System.out::println);
 
