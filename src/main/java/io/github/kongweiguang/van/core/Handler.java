@@ -3,12 +3,10 @@ package io.github.kongweiguang.van.core;
 /**
  * 处理器
  *
- * @param <C>
- * @param <R>
  * @author kongweiguang
  */
 @FunctionalInterface
-public interface Handler<C, R> {
+public interface Handler<Msg> {
     /**
      * 处理器昵称
      *
@@ -24,5 +22,5 @@ public interface Handler<C, R> {
      * @param msg 消息
      * @throws Exception 异常
      */
-    void handle(Msg<C, R> msg) throws Exception;
+    void handle(Msg msg) throws Exception;
 }

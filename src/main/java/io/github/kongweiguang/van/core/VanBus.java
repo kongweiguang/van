@@ -74,7 +74,7 @@ public interface VanBus<C, R> {
      * @param clazz   实体类型
      * @param handler 处理器
      */
-    default void pull(final Class<?> clazz, final Handler<C, R> handler) {
+    default void pull(final Class<?> clazz, final Handler<Msg<C, R>> handler) {
         pull(clazz.getName(), handler);
     }
 
@@ -84,7 +84,7 @@ public interface VanBus<C, R> {
      * @param topic   主题
      * @param handler 处理器
      */
-    void pull(final String topic, final Handler<C, R> handler);
+    void pull(final String topic, final Handler<Msg<C, R>> handler);
 
     /**
      * 拉取类中加了{@link Pull}注解的方法，并执行

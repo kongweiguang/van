@@ -16,7 +16,7 @@ import static java.util.Optional.ofNullable;
  * @author kongweiguang
  */
 public final class VanBusImpl<C, R> implements VanBus<C, R> {
-    private final Map<String, List<Handler<C, R>>> router = new HashMap<>();
+    private final Map<String, List<Handler<Msg<C, R>>>> router = new HashMap<>();
 
     @Override
     public void push(final Msg<C, R> msg, final Consumer<R> call) {
@@ -35,7 +35,7 @@ public final class VanBusImpl<C, R> implements VanBus<C, R> {
     }
 
     @Override
-    public synchronized void pull(final String topic, final Handler<C, R> handler) {
+    public synchronized void pull(final String topic, final Handler<Msg<C, R>> handler) {
         notNull(topic, "topic must not be null");
         notNull(handler, "handler must not be null");
 
@@ -74,7 +74,7 @@ public final class VanBusImpl<C, R> implements VanBus<C, R> {
         }
     }
 
-    private Handler<C, R> hd(final Object obj, final int size, final Method m) {
+    private Handler<Msg<C, R>> hd(final Object obj, final int size, final Method m) {
         return msg -> {
             final Object fr;
 
