@@ -1,8 +1,9 @@
 package io.github.kongweiguang.van.test.push_entity;
 
-import io.github.kongweiguang.van.Van;
 import io.github.kongweiguang.van.test.metedata.User;
 import org.junit.jupiter.api.Test;
+
+import static io.github.kongweiguang.van.Van.hub;
 
 public class PushEntityTest {
 
@@ -10,12 +11,12 @@ public class PushEntityTest {
     void test1() throws Exception {
         final User user = new User(99, "kpp", new String[]{"1", "2"});
 
-        Van.hub().pull(User.class, h -> {
+        hub().pull(User.class, h -> {
             System.out.println(h);
             h.res("123");
         });
 
-        Van.hub().push(user);
+        hub().push(user);
 
     }
 }

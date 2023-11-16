@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 本地eventBus
+ * 类似git操作的本地eventBus
  *
  * @author kongweiguang
  */
