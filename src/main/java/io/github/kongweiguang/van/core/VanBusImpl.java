@@ -18,13 +18,13 @@ public final class VanBusImpl<C, R> implements VanBus<C, R> {
     public void push(final Msg<C, R> msg, final Consumer<R> call) {
         msg.callback(call);
 
-        router.computeIfAbsent(msg.topic(), k -> new ArrayList<>()).forEach(h -> {
+        for (Handler<C, R> h : router.computeIfAbsent(msg.topic(), k -> new ArrayList<>())) {
             try {
                 h.handle(msg);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
-        });
+        }
     }
 
     @Override
