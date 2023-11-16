@@ -14,7 +14,7 @@ import static java.util.Optional.ofNullable;
  * @author kongweiguang
  */
 public final class VanBusImpl<C, R> implements VanBus<C, R> {
-    private final Map<String, List<Handler<C, R>>> router = new LinkedHashMap<>();
+    private final Map<String, List<Handler<C, R>>> router = new HashMap<>();
 
     @Override
     public void push(final Msg<C, R> msg, final Consumer<R> call) {
