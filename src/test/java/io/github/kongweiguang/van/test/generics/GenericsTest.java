@@ -16,7 +16,7 @@ public class GenericsTest {
         Van.<User, List<String>>hub().pull(topic, h -> {
             final User user = h.content();
             System.out.println("user = " + user);
-            h.reply(Collections.singletonList(user.hobby()[0]));
+            h.res(Collections.singletonList(user.hobby()[0]));
         });
 
 

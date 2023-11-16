@@ -12,7 +12,7 @@ public class PushEntityTest {
 
         Van.hub().pull(User.class, h -> {
             System.out.println(h);
-            h.reply("123");
+            h.res("123");
         });
 
         Van.hub().push(user);

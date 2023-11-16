@@ -11,12 +11,13 @@ public class AsyncTest {
     @Test
     void test() throws Exception {
         //拉取消息
-        Van.hub().pull(topic, h -> CompletableFuture.runAsync(() -> {
+        Van.<String, String>hub().pull(topic, h -> CompletableFuture.runAsync(() -> {
+            h.res("123");
             System.out.println(Thread.currentThread().getName());
             System.out.println(h);
         }));
 
         //推送消息
-        Van.hub().push(topic, "content");
+        Van.<String, String>hub().push(topic, "content", r -> System.out.println(r));
     }
 }

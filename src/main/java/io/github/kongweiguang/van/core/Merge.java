@@ -1,26 +1,26 @@
 package io.github.kongweiguang.van.core;
 
 /**
- * 处理器
+ * 合并器
  *
  * @author kongweiguang
  */
 @FunctionalInterface
-public interface Merge<repo> {
+public interface Merge<Action> {
     /**
-     * 处理器昵称
+     * 名称
      *
-     * @return 昵称
+     * @return 名称
      */
     default String name() {
         return null;
     }
 
     /**
-     * 处理消息
+     * 合并操作
      *
-     * @param msg 消息
+     * @param action 操作
      * @throws Exception 异常
      */
-    void merge(repo msg) throws Exception;
+    void merge(Action action) throws Exception;
 }

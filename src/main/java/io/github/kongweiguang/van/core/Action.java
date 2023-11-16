@@ -9,31 +9,31 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 /**
- * 消息
+ * 操作
  *
- * @param <C> 消息的内容
- * @param <R> 消息返回的结果
+ * @param <C> 操作的内容类型
+ * @param <R> 合并后返回的结果类型
  * @author kongweiguang
  */
 public final class Action<C, R> {
     private final long id;
-    private final String topic;
+    private final String branch;
     private final C content;
     private Consumer<R> call;
-    private Map<Object, Object> attr;
+    private Map<Object, Object> tag;
 
-    private Action(final long id, final String topic, final C content) {
+    private Action(final long id, final String branch, final C content) {
         this.id = id;
-        this.topic = topic;
+        this.branch = branch;
         this.content = content;
     }
 
-    public static <C, R> Action<C, R> of(final String topic, final C c) {
-        return of(IdGen.of.next(), topic, c);
+    public static <C, R> Action<C, R> of(final String branch, final C c) {
+        return of(IdGen.of.next(), branch, c);
     }
 
-    public static <C, R> Action<C, R> of(final long id, final String topic, final C c) {
-        return new Action<>(id, topic, c);
+    public static <C, R> Action<C, R> of(final long id, final String branch, final C c) {
+        return new Action<>(id, branch, c);
     }
 
     /**
@@ -46,18 +46,18 @@ public final class Action<C, R> {
     }
 
     /***
-     * 获取消息的主题
+     * 获取操作的分支
      *
-     * @return 主题
+     * @return 分支
      */
-    public String topic() {
-        return topic;
+    public String branch() {
+        return branch;
     }
 
     /**
-     * 消息内容
+     * 操作内容
      *
-     * @return 消息内容
+     * @return 内容
      */
     public C content() {
         return content;
@@ -73,44 +73,44 @@ public final class Action<C, R> {
     }
 
     /**
-     * 触发调用者的回调
+     * 触发推送者的回调
      *
-     * @param r 回调参数
+     * @param r 回调
      */
-    public void reply(R r) {
+    public void res(R r) {
         if (hasCallBack()) {
             call.accept(r);
         }
     }
 
     /**
-     * 获取携带参数
+     * 获取标签
      *
      * @param k   键
      * @param <T> 返回类型
      * @return 值
      */
-    public <T> T attr(final String k) {
-        if (isNull(attr)) {
+    public <T> T tag(final String k) {
+        if (isNull(tag)) {
             return null;
         }
 
-        return (T) attr.get(k);
+        return (T) tag.get(k);
     }
 
     /**
-     * 添加参数
+     * 添加标签
      *
      * @param k 键
      * @param v 值
      * @return this
      */
-    public Action<C, R> attr(final Object k, final Object v) {
-        if (isNull(attr)) {
-            this.attr = new HashMap<>();
+    public Action<C, R> tag(final Object k, final Object v) {
+        if (isNull(tag)) {
+            this.tag = new HashMap<>();
         }
 
-        attr.put(k, v);
+        tag.put(k, v);
         return this;
     }
 
@@ -127,9 +127,9 @@ public final class Action<C, R> {
     public String toString() {
         return new StringJoiner(", ", Action.class.getSimpleName() + "[", "]")
                 .add("id=" + id)
-                .add("topic='" + topic + "'")
+                .add("branch='" + branch + "'")
                 .add("content=" + content)
-                .add("attr=" + attr)
+                .add("attr=" + tag)
                 .toString();
     }
 }

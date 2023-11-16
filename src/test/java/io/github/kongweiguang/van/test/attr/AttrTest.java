@@ -13,6 +13,6 @@ public class AttrTest {
         Van.<String, String>hub().pull(topic, System.out::println);
 
         //推送消息
-        Van.<String, Void>hub().push(Action.<String, Void>of(topic, "content").attr("k", "v"));
+        Van.<String, Void>hub().push(Action.<String, Void>of(topic, "content").tag("k", "v"));
     }
 }

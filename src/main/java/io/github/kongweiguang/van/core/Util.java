@@ -1,5 +1,10 @@
 package io.github.kongweiguang.van.core;
 
+/**
+ * 工具类
+ *
+ * @author kongweiguang
+ */
 public class Util {
     public static void notNull(final Object obj, final String msg) {
         if (obj == null) {
