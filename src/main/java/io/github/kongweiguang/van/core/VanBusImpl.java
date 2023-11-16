@@ -7,8 +7,8 @@ import java.util.function.Consumer;
 /**
  * VanEventBusImpl
  *
- * @param <C>
- * @param <R>
+ * @param <C> 消息类型
+ * @param <R> 返回类型
  * @author kongweiguang
  */
 public final class VanBusImpl<C, R> implements VanBus<C, R> {
