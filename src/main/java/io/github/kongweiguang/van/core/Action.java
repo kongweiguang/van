@@ -15,25 +15,25 @@ import static java.util.Objects.nonNull;
  * @param <R> 消息返回的结果
  * @author kongweiguang
  */
-public final class Msg<C, R> {
+public final class Action<C, R> {
     private final long id;
     private final String topic;
     private final C content;
     private Consumer<R> call;
     private Map<Object, Object> attr;
 
-    private Msg(final long id, final String topic, final C content) {
+    private Action(final long id, final String topic, final C content) {
         this.id = id;
         this.topic = topic;
         this.content = content;
     }
 
-    public static <C, R> Msg<C, R> of(final String topic, final C c) {
+    public static <C, R> Action<C, R> of(final String topic, final C c) {
         return of(IdGen.of.next(), topic, c);
     }
 
-    public static <C, R> Msg<C, R> of(final long id, final String topic, final C c) {
-        return new Msg<>(id, topic, c);
+    public static <C, R> Action<C, R> of(final long id, final String topic, final C c) {
+        return new Action<>(id, topic, c);
     }
 
     /**
@@ -105,7 +105,7 @@ public final class Msg<C, R> {
      * @param v 值
      * @return this
      */
-    public Msg<C, R> attr(final Object k, final Object v) {
+    public Action<C, R> attr(final Object k, final Object v) {
         if (isNull(attr)) {
             this.attr = new HashMap<>();
         }
@@ -125,7 +125,7 @@ public final class Msg<C, R> {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", Msg.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", Action.class.getSimpleName() + "[", "]")
                 .add("id=" + id)
                 .add("topic='" + topic + "'")
                 .add("content=" + content)

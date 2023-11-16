@@ -6,7 +6,7 @@ package io.github.kongweiguang.van.core;
  * @author kongweiguang
  */
 @FunctionalInterface
-public interface Handler<Msg> {
+public interface Merge<repo> {
     /**
      * 处理器昵称
      *
@@ -22,5 +22,5 @@ public interface Handler<Msg> {
      * @param msg 消息
      * @throws Exception 异常
      */
-    void handle(Msg msg) throws Exception;
+    void merge(repo msg) throws Exception;
 }

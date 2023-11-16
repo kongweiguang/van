@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * 将方法注册到消费者组中，<strong>被标注的方法只能有一个参数</strong>
  * <p>
- * 方法如果有返回值则会调用{@link Msg} 的reply方法，触发发布者的回掉方法
+ * 方法如果有返回值则会调用{@link Action} 的reply方法，触发发布者的回掉方法
  *
  * @author kongweiguang
  */

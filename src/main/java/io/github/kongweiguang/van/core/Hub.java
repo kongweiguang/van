@@ -9,7 +9,7 @@ import java.util.function.Consumer;
  * @param <R> 返回类型
  * @author kongweiguang
  */
-public interface VanBus<C, R> {
+public interface Hub<C, R> {
 
     /**
      * 推送实体类消息
@@ -17,7 +17,7 @@ public interface VanBus<C, R> {
      * @param c 实体类
      */
     default void push(final C c) {
-        push(Msg.of(c.getClass().getName(), c), null);
+        push(Action.of(c.getClass().getName(), c), null);
     }
 
     /**
@@ -27,7 +27,7 @@ public interface VanBus<C, R> {
      * @param call 回调
      */
     default void push(final C c, final Consumer<R> call) {
-        push(Msg.of(c.getClass().getName(), c), call);
+        push(Action.of(c.getClass().getName(), c), call);
     }
 
     /**
@@ -37,7 +37,7 @@ public interface VanBus<C, R> {
      * @param c     消息
      */
     default void push(final String topic, final C c) {
-        push(Msg.of(topic, c), null);
+        push(Action.of(topic, c), null);
     }
 
     /**
@@ -48,7 +48,7 @@ public interface VanBus<C, R> {
      * @param call  回调
      */
     default void push(final String topic, final C c, final Consumer<R> call) {
-        push(Msg.of(topic, c), call);
+        push(Action.of(topic, c), call);
     }
 
     /**
@@ -56,7 +56,7 @@ public interface VanBus<C, R> {
      *
      * @param msg 消息
      */
-    default void push(final Msg<C, R> msg) {
+    default void push(final Action<C, R> msg) {
         push(msg, null);
     }
 
@@ -66,7 +66,7 @@ public interface VanBus<C, R> {
      * @param msg  消息
      * @param call 回调
      */
-    void push(final Msg<C, R> msg, final Consumer<R> call);
+    void push(final Action<C, R> msg, final Consumer<R> call);
 
     /**
      * 拉取指定的实体类型的消息
@@ -74,7 +74,7 @@ public interface VanBus<C, R> {
      * @param clazz   实体类型
      * @param handler 处理器
      */
-    default void pull(final Class<?> clazz, final Handler<Msg<C, R>> handler) {
+    default void pull(final Class<?> clazz, final Merge<Action<C, R>> handler) {
         pull(clazz.getName(), handler);
     }
 
@@ -84,7 +84,7 @@ public interface VanBus<C, R> {
      * @param topic   主题
      * @param handler 处理器
      */
-    void pull(final String topic, final Handler<Msg<C, R>> handler);
+    void pull(final String topic, final Merge<Action<C, R>> handler);
 
     /**
      * 拉取类中加了{@link Pull}注解的方法，并执行

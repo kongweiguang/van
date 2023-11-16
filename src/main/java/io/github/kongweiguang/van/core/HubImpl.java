@@ -15,18 +15,18 @@ import static java.util.Optional.ofNullable;
  * @param <R> 返回类型
  * @author kongweiguang
  */
-public final class VanBusImpl<C, R> implements VanBus<C, R> {
-    private final Map<String, List<Handler<Msg<C, R>>>> router = new HashMap<>();
+public final class HubImpl<C, R> implements Hub<C, R> {
+    private final Map<String, List<Merge<Action<C, R>>>> router = new HashMap<>();
 
     @Override
-    public void push(final Msg<C, R> msg, final Consumer<R> call) {
+    public void push(final Action<C, R> msg, final Consumer<R> call) {
         notNull(msg, "msg must not be null");
 
         msg.callback(call);
 
         ofNullable(router.get(msg.topic())).ifPresent(hs -> hs.forEach(h -> {
             try {
-                h.handle(msg);
+                h.merge(msg);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
@@ -35,7 +35,7 @@ public final class VanBusImpl<C, R> implements VanBus<C, R> {
     }
 
     @Override
-    public synchronized void pull(final String topic, final Handler<Msg<C, R>> handler) {
+    public synchronized void pull(final String topic, final Merge<Action<C, R>> handler) {
         notNull(topic, "topic must not be null");
         notNull(handler, "handler must not be null");
 
@@ -74,7 +74,7 @@ public final class VanBusImpl<C, R> implements VanBus<C, R> {
         }
     }
 
-    private Handler<Msg<C, R>> hd(final Object obj, final int size, final Method m) {
+    private Merge<Action<C, R>> hd(final Object obj, final int size, final Method m) {
         return msg -> {
             final Object fr;
 

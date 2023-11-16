@@ -13,7 +13,7 @@ public class GenericsTest {
     @Test
     void test() throws Exception {
         //拉取消息
-        Van.<User, List<String>>bus().pull(topic, h -> {
+        Van.<User, List<String>>hub().pull(topic, h -> {
             final User user = h.content();
             System.out.println("user = " + user);
             h.reply(Collections.singletonList(user.hobby()[0]));
@@ -21,7 +21,7 @@ public class GenericsTest {
 
 
         //推送消息
-        Van.<User, List<String>>bus().push(topic, new User(1, "kpp", new String[]{"code"}), c -> {
+        Van.<User, List<String>>hub().push(topic, new User(1, "kpp", new String[]{"code"}), c -> {
             System.out.println(c.size());
             System.out.println(c.get(0));
         });

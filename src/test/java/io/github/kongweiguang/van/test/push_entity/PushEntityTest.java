@@ -10,12 +10,12 @@ public class PushEntityTest {
     void test1() throws Exception {
         final User user = new User(99, "kpp", new String[]{"1", "2"});
 
-        Van.bus().pull(User.class, h -> {
+        Van.hub().pull(User.class, h -> {
             System.out.println(h);
             h.reply("123");
         });
 
-        Van.bus().push(user);
+        Van.hub().push(user);
 
     }
 }

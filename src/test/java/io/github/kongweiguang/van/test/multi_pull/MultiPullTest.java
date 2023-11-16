@@ -9,10 +9,10 @@ public class MultiPullTest {
     @Test
     void test1() throws Exception {
         //拉取消息
-        Van.bus().pull(topic, System.out::println);
-        Van.bus().pull(topic, System.out::println);
+        Van.hub().pull(topic, System.out::println);
+        Van.hub().pull(topic, System.out::println);
 
         //推送消息
-        Van.bus().push(topic, "content");
+        Van.hub().push(topic, "content");
     }
 }

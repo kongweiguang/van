@@ -1,7 +1,7 @@
 package io.github.kongweiguang.van;
 
-import io.github.kongweiguang.van.core.VanBus;
-import io.github.kongweiguang.van.core.VanBusImpl;
+import io.github.kongweiguang.van.core.Hub;
+import io.github.kongweiguang.van.core.HubImpl;
 
 /**
  * 本地eventBus
@@ -13,10 +13,10 @@ public final class Van {
         throw new UnsupportedOperationException("van must not be construct");
     }
 
-    private static final VanBus bus = new VanBusImpl<>();
+    private static final Hub hub = new HubImpl<>();
 
-    public static <C, R> VanBus<C, R> bus() {
-        return bus;
+    public static <C, R> Hub<C, R> hub() {
+        return hub;
     }
 
 }

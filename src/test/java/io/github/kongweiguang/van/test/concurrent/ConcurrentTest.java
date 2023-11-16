@@ -12,12 +12,12 @@ public class ConcurrentTest {
     void test() throws Exception {
         AtomicLong at = new AtomicLong();
         //拉取消息
-        Van.bus().pull(topic, h -> at.incrementAndGet());
+        Van.hub().pull(topic, h -> at.incrementAndGet());
 
         final long start = System.currentTimeMillis();
         for (int i = 0; i < 100_000_000; i++) {
             //推送消息
-            Van.bus().push(topic, "content");
+            Van.hub().push(topic, "content");
         }
         final long end = System.currentTimeMillis();
         System.out.println("use time -> " + (end - start) + "ms");
