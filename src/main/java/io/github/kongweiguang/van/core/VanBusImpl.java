@@ -4,6 +4,8 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Consumer;
 
+import static io.github.kongweiguang.van.core.Util.isTure;
+import static io.github.kongweiguang.van.core.Util.notNull;
 import static java.util.Optional.ofNullable;
 
 /**
@@ -18,6 +20,8 @@ public final class VanBusImpl<C, R> implements VanBus<C, R> {
 
     @Override
     public void push(final Msg<C, R> msg, final Consumer<R> call) {
+        notNull(msg, "msg must not be null");
+
         msg.callback(call);
 
         ofNullable(router.get(msg.topic())).ifPresent(hs -> hs.forEach(h -> {
@@ -32,16 +36,25 @@ public final class VanBusImpl<C, R> implements VanBus<C, R> {
 
     @Override
     public synchronized void pull(final String topic, final Handler<C, R> handler) {
+        notNull(topic, "topic must not be null");
+        notNull(handler, "handler must not be null");
+
+
         router.computeIfAbsent(topic, k -> new ArrayList<>()).add(handler);
     }
 
     @Override
     public synchronized void remove(final String topic, final String name) {
+        notNull(topic, "topic must not be null");
+        notNull(name, "name must not be null");
+
         ofNullable(router.get(topic)).ifPresent(h -> h.removeIf(e -> Objects.equals(e.name(), name)));
     }
 
     @Override
     public void pull(final Object obj) {
+        notNull(obj, "obj must not be null");
+
         for (Class<?> c = obj.getClass(); c != null; c = c.getSuperclass()) {
 
             for (Method m : c.getDeclaredMethods()) {
@@ -50,9 +63,8 @@ public final class VanBusImpl<C, R> implements VanBus<C, R> {
                 if (sub != null) {
 
                     Class<?>[] params = m.getParameterTypes();
-                    if (params.length > 1) {
-                        throw new IllegalArgumentException("method params not be > 1");
-                    }
+
+                    isTure(params.length < 1, "method params not be > 1");
 
                     m.setAccessible(true);
                     pull(sub.value().isEmpty() ? params[0].getName() : sub.value(), hd(obj, params.length, m));

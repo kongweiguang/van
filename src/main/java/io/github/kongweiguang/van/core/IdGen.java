@@ -5,6 +5,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static io.github.kongweiguang.van.core.Util.notNull;
+
 /**
  * id生成器
  *
@@ -19,6 +21,8 @@ public final class IdGen {
     }
 
     public static IdGen of(final Duration period) {
+        notNull(period, "period must not be null");
+
         return new IdGen(period);
     }
 

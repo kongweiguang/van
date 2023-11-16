@@ -10,7 +10,7 @@ import io.github.kongweiguang.van.core.VanBusImpl;
  */
 public final class Van {
     private Van() {
-        throw new UnsupportedOperationException("van not be construct");
+        throw new UnsupportedOperationException("van must not be construct");
     }
 
     private static final VanBus bus = new VanBusImpl<>();
