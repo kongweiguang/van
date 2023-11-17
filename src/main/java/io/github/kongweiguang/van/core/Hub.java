@@ -84,7 +84,18 @@ public interface Hub<C, R> {
      * @param branch 分支
      * @param merge  合并器
      */
-    void pull(final String branch, final Merge<Action<C, R>> merge);
+    default void pull(final String branch, final Merge<Action<C, R>> merge) {
+        pull(branch, 0, merge);
+    }
+
+    /**
+     * 拉取指定的branch
+     *
+     * @param branch 分支
+     * @param index  拉取的顺序
+     * @param merge  合并器
+     */
+    void pull(final String branch, final int index, final Merge<Action<C, R>> merge);
 
     /**
      * 拉取类中加了{@link Pull}注解的方法，并在推送到指定的分支执行

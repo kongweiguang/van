@@ -6,6 +6,23 @@ package io.github.kongweiguang.van.core;
  * @author kongweiguang
  */
 public class Util {
+
+    public static boolean isEmpty(final String str) {
+        if (str == null) {
+            return true;
+        }
+
+        return str.isEmpty();
+    }
+
+    public static String defaultIsEmpty(final String str, final String d) {
+        if (isEmpty(str)) {
+            return d;
+        }
+
+        return str;
+    }
+
     public static void notNull(final Object obj, final String msg) {
         if (obj == null) {
             throw new IllegalArgumentException(msg);
