@@ -79,6 +79,17 @@ public interface Hub<C, R> {
     }
 
     /**
+     * 拉取指定的实体类型的操作
+     *
+     * @param clazz 实体类型
+     * @param index 拉取的顺序
+     * @param merge 合并器
+     */
+    default void pull(final Class<?> clazz, final int index, final Merge<Action<C, R>> merge) {
+        pull(clazz.getName(), index, merge);
+    }
+
+    /**
      * 拉取指定的branch
      *
      * @param branch 分支
