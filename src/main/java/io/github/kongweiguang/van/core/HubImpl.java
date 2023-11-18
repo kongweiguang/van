@@ -1,7 +1,12 @@
 package io.github.kongweiguang.van.core;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
 import static io.github.kongweiguang.van.core.Util.*;
@@ -15,7 +20,7 @@ import static java.util.Optional.ofNullable;
  * @author kongweiguang
  */
 public final class HubImpl<C, R> implements Hub<C, R> {
-    private final Map<String, List<MergeWarp<C, R>>> repo = new HashMap<>();
+    private final Map<String, List<MergeWarp<C, R>>> repo = new ConcurrentHashMap<>();
 
     @Override
     public void push(final Action<C, R> action, final Consumer<R> call) {
@@ -28,18 +33,18 @@ public final class HubImpl<C, R> implements Hub<C, R> {
     }
 
     @Override
-    public synchronized void pull(final String branch, final int index, final Merge<Action<C, R>> merge) {
+    public void pull(final String branch, final int index, final Merge<Action<C, R>> merge) {
         notNull(branch, "branch must not be null");
         notNull(merge, "merge must not be null");
 
-        final List<MergeWarp<C, R>> merges = repo.computeIfAbsent(branch, k -> new ArrayList<>());
+        final List<MergeWarp<C, R>> merges = repo.computeIfAbsent(branch, k -> new CopyOnWriteArrayList<>());
 
         merges.add(new MergeWarp<>(index, merge));
         merges.sort(Comparator.comparing(MergeWarp::index));
     }
 
     @Override
-    public synchronized void remove(final String branch, final String name) {
+    public void remove(final String branch, final String name) {
         notNull(branch, "branch must not be null");
         notNull(name, "name must not be null");
 
@@ -51,6 +56,10 @@ public final class HubImpl<C, R> implements Hub<C, R> {
         notNull(obj, "obj must not be null");
 
         for (Class<?> c = obj.getClass(); c != null; c = c.getSuperclass()) {
+            //跳过object内部的方法，提高性能
+            if (c.getName().equals("java.lang.Object")) {
+                continue;
+            }
 
             for (Method m : c.getDeclaredMethods()) {
                 Pull pull = m.getAnnotation(Pull.class);

@@ -6,7 +6,7 @@ package io.github.kongweiguang.van.core;
  * @param <C> 操作内容类型
  * @param <R> 返回结果类型
  */
-class MergeWarp<C, R> {
+final class MergeWarp<C, R> {
     private final int index;
     private final Merge<Action<C, R>> merge;
 

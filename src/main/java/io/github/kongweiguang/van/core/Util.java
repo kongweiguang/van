@@ -5,7 +5,7 @@ package io.github.kongweiguang.van.core;
  *
  * @author kongweiguang
  */
-public class Util {
+public final class Util {
 
     public static boolean isEmpty(final String str) {
         if (str == null) {

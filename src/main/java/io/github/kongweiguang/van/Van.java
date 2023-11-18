@@ -16,8 +16,8 @@ public final class Van {
         throw new UnsupportedOperationException("van must not be construct");
     }
 
-    private static final Map<String, Hub> hubs = new ConcurrentHashMap<>();
-    private static final Hub hub = new HubImpl<>();
+    private static final Map<String, Hub<?, ?>> hubs = new ConcurrentHashMap<>();
+    private static final Hub<?, ?> hub = new HubImpl<>();
 
     /**
      * 默认的hub
