@@ -11,7 +11,10 @@ public class PushTopicTest {
     @Test
     void test() throws Exception {
         //拉取消息
-        hub().pull(topic, System.out::println);
+        hub().pull(topic, m -> {
+            System.out.println(m.id());
+            System.out.println(m.content());
+        });
 
 
         //推送消息

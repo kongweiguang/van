@@ -16,8 +16,8 @@ public interface Hub<C, R> {
      *
      * @param c 内容
      */
-    default void push(final C c) {
-        push(Action.of(c.getClass().getName(), c), null);
+    default Hub<C, R> push(final C c) {
+        return push(Action.of(c.getClass().getName(), c), null);
     }
 
     /**
@@ -26,8 +26,8 @@ public interface Hub<C, R> {
      * @param c    内容
      * @param call 回调
      */
-    default void push(final C c, final Consumer<R> call) {
-        push(Action.of(c.getClass().getName(), c), call);
+    default Hub<C, R> push(final C c, final Consumer<R> call) {
+        return push(Action.of(c.getClass().getName(), c), call);
     }
 
     /**
@@ -36,8 +36,8 @@ public interface Hub<C, R> {
      * @param branch 分支
      * @param c      内容
      */
-    default void push(final String branch, final C c) {
-        push(Action.of(branch, c), null);
+    default Hub<C, R> push(final String branch, final C c) {
+        return push(Action.of(branch, c), null);
     }
 
     /**
@@ -47,8 +47,8 @@ public interface Hub<C, R> {
      * @param c      内容
      * @param call   回调
      */
-    default void push(final String branch, final C c, final Consumer<R> call) {
-        push(Action.of(branch, c), call);
+    default Hub<C, R> push(final String branch, final C c, final Consumer<R> call) {
+        return push(Action.of(branch, c), call);
     }
 
     /**
@@ -56,8 +56,8 @@ public interface Hub<C, R> {
      *
      * @param action 操作
      */
-    default void push(final Action<C, R> action) {
-        push(action, null);
+    default Hub<C, R> push(final Action<C, R> action) {
+        return push(action, null);
     }
 
     /**
@@ -66,7 +66,7 @@ public interface Hub<C, R> {
      * @param action 操作
      * @param call   回调
      */
-    void push(final Action<C, R> action, final Consumer<R> call);
+    Hub<C, R> push(final Action<C, R> action, final Consumer<R> call);
 
     /**
      * 拉取指定的实体类型的操作
@@ -74,8 +74,8 @@ public interface Hub<C, R> {
      * @param clazz 实体类型
      * @param merge 合并器
      */
-    default void pull(final Class<?> clazz, final Merge<Action<C, R>> merge) {
-        pull(clazz.getName(), merge);
+    default Hub<C, R> pull(final Class<?> clazz, final Merge<Action<C, R>> merge) {
+        return pull(clazz.getName(), merge);
     }
 
     /**
@@ -85,8 +85,8 @@ public interface Hub<C, R> {
      * @param index 拉取的顺序
      * @param merge 合并器
      */
-    default void pull(final Class<?> clazz, final int index, final Merge<Action<C, R>> merge) {
-        pull(clazz.getName(), index, merge);
+    default Hub<C, R> pull(final Class<?> clazz, final int index, final Merge<Action<C, R>> merge) {
+        return pull(clazz.getName(), index, merge);
     }
 
     /**
@@ -95,8 +95,8 @@ public interface Hub<C, R> {
      * @param branch 分支
      * @param merge  合并器
      */
-    default void pull(final String branch, final Merge<Action<C, R>> merge) {
-        pull(branch, 0, merge);
+    default Hub<C, R> pull(final String branch, final Merge<Action<C, R>> merge) {
+        return pull(branch, 0, merge);
     }
 
     /**
@@ -106,14 +106,14 @@ public interface Hub<C, R> {
      * @param index  拉取的顺序
      * @param merge  合并器
      */
-    void pull(final String branch, final int index, final Merge<Action<C, R>> merge);
+    Hub<C, R> pull(final String branch, final int index, final Merge<Action<C, R>> merge);
 
     /**
-     * 拉取类中加了{@link Pull}注解的方法，并在推送到指定的分支执行
+     * 拉取类中加了{@link Pull}注解的方法，并在推送到指定的分支合并
      *
      * @param obj 含有{@link Pull}注解的类实例
      */
-    void pull(final Object obj);
+    Hub<C, R> pull(final Object obj);
 
     /**
      * 移除branch下指定名称的合并器
@@ -121,5 +121,5 @@ public interface Hub<C, R> {
      * @param branch 分支
      * @param name   合并器的名字
      */
-    void remove(final String branch, final String name);
+    Hub<C, R> remove(final String branch, final String name);
 }

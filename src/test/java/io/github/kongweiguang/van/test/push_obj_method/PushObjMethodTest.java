@@ -1,5 +1,6 @@
 package io.github.kongweiguang.van.test.push_obj_method;
 
+import io.github.kongweiguang.van.Van;
 import io.github.kongweiguang.van.core.Action;
 import io.github.kongweiguang.van.test.metedata.User;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ public class PushObjMethodTest {
         //推送user类的topic
         hub().push(new User(1, "k", new String[]{"h"}), object -> System.out.println("object = " + object));
 
-        hub().push(new User(1, "k", new String[]{"h"}), object -> System.out.println("object = " + object));
+        Van.<User, String>hub().push(new User(1, "k", new String[]{"h"}), object -> System.out.println("object = " + object));
 
     }
 }

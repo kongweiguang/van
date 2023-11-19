@@ -23,17 +23,18 @@ public final class HubImpl<C, R> implements Hub<C, R> {
     private final Map<String, List<MergeWarp<C, R>>> repo = new ConcurrentHashMap<>();
 
     @Override
-    public void push(final Action<C, R> action, final Consumer<R> call) {
+    public Hub<C, R> push(final Action<C, R> action, final Consumer<R> call) {
         notNull(action, "action must not be null");
 
         action.callback(call);
 
         ofNullable(repo.get(action.branch())).ifPresent(ms -> ms.forEach(m -> m.merge(action)));
 
+        return this;
     }
 
     @Override
-    public void pull(final String branch, final int index, final Merge<Action<C, R>> merge) {
+    public Hub<C, R> pull(final String branch, final int index, final Merge<Action<C, R>> merge) {
         notNull(branch, "branch must not be null");
         notNull(merge, "merge must not be null");
 
@@ -44,14 +45,16 @@ public final class HubImpl<C, R> implements Hub<C, R> {
         if (merges.size() > 1) {
             merges.sort(Comparator.comparing(MergeWarp::index));
         }
+
+        return this;
     }
 
     @Override
-    public void pull(final Object obj) {
+    public Hub<C, R> pull(final Object obj) {
         notNull(obj, "obj must not be null");
 
         for (Class<?> c = obj.getClass(); c != null; c = c.getSuperclass()) {
-            //跳过object内部的方法，提高性能
+            //跳过object内部的方法，减少便利
             if (c.getName().equals("java.lang.Object")) {
                 continue;
             }
@@ -72,6 +75,8 @@ public final class HubImpl<C, R> implements Hub<C, R> {
             }
 
         }
+
+        return this;
     }
 
     private static String branch(final Method m, final Pull pull, final Class<?>[] params) {
@@ -128,10 +133,11 @@ public final class HubImpl<C, R> implements Hub<C, R> {
     }
 
     @Override
-    public void remove(final String branch, final String name) {
+    public Hub<C, R> remove(final String branch, final String name) {
         notNull(branch, "branch must not be null");
         notNull(name, "name must not be null");
 
         ofNullable(repo.get(branch)).ifPresent(ms -> ms.removeIf(m -> Objects.equals(m.name(), name)));
+        return this;
     }
 }

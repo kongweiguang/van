@@ -29,10 +29,4 @@ public class MyHandler {
         return "hello2";
     }
 
-    @Pull
-    public String fn4(Action action) {
-        System.out.println(action);
-        return "hello3";
-    }
-
 }
