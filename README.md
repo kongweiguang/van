@@ -53,7 +53,10 @@ implementation("io.github.kongweiguang:van:0.1")
 
 # 简单介绍
 
+详情看test的例子
+
 ## 编程式
+
 ```java
 public class PushTopicTest {
     String topic = "topic.test1";
@@ -77,6 +80,7 @@ public class PushTopicTest {
 ```
 
 ## 注解式
+
 ```java
 public class PushObjMethodTest {
     @Test
