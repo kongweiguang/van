@@ -1,5 +1,6 @@
 package io.github.kongweiguang.van.test.push_obj_method;
 
+import io.github.kongweiguang.van.core.Action;
 import io.github.kongweiguang.van.core.Pull;
 import io.github.kongweiguang.van.test.metedata.User;
 
@@ -9,6 +10,7 @@ public class MyHandler {
         System.out.println(user);
         return "hello";
     }
+
 
     @Pull("bala")
     public String fn1() {
@@ -20,4 +22,17 @@ public class MyHandler {
     public void fn2() {
         System.out.println("fn2");
     }
+
+    @Pull
+    public String fn3(Action<User, String> action) {
+        System.out.println(action);
+        return "hello2";
+    }
+
+    @Pull
+    public String fn4(Action action) {
+        System.out.println(action);
+        return "hello3";
+    }
+
 }

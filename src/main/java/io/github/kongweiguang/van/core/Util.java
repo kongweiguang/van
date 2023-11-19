@@ -1,5 +1,12 @@
 package io.github.kongweiguang.van.core;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+
 /**
  * 工具类
  *
@@ -33,5 +40,19 @@ final class Util {
         if (!bool) {
             throw new IllegalArgumentException(msg);
         }
+    }
+
+    public static List<String> generics(Method m) {
+        List<String> fr = new ArrayList<>(2);
+        Type[] genericParameterTypes = m.getGenericParameterTypes();
+        for (Type type : genericParameterTypes) {
+            if (type instanceof ParameterizedType) {
+                Type[] actualTypeArguments = ((ParameterizedType) type).getActualTypeArguments();
+                for (Type actualType : actualTypeArguments) {
+                    fr.add(actualType.getTypeName());
+                }
+            }
+        }
+        return fr;
     }
 }

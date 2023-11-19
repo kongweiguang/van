@@ -40,15 +40,10 @@ public final class HubImpl<C, R> implements Hub<C, R> {
         final List<MergeWarp<C, R>> merges = repo.computeIfAbsent(branch, k -> new CopyOnWriteArrayList<>());
 
         merges.add(new MergeWarp<>(index, merge));
-        merges.sort(Comparator.comparing(MergeWarp::index));
-    }
 
-    @Override
-    public void remove(final String branch, final String name) {
-        notNull(branch, "branch must not be null");
-        notNull(name, "name must not be null");
-
-        ofNullable(repo.get(branch)).ifPresent(ms -> ms.removeIf(m -> Objects.equals(m.name(), name)));
+        if (merges.size() > 1) {
+            merges.sort(Comparator.comparing(MergeWarp::index));
+        }
     }
 
     @Override
@@ -65,20 +60,44 @@ public final class HubImpl<C, R> implements Hub<C, R> {
                 Pull pull = m.getAnnotation(Pull.class);
 
                 if (pull != null) {
-
                     Class<?>[] params = m.getParameterTypes();
 
-                    isTure(params.length <= 1, "method params not be > 1");
+                    isTure(!(params.length == 0 && pull.value().isEmpty()), "method or branch must have a value ");
+
+                    isTure(params.length <= 1, "method params not > 1");
 
                     m.setAccessible(true);
-                    pull(pull.value().isEmpty() ? params[0].getName() : pull.value(), pull.index(), mr(obj, params.length, m, pull.name()));
+                    pull(branch(m, pull, params), pull.index(), mr(obj, m, params, pull.name()));
                 }
             }
 
         }
     }
 
-    private Merge<Action<C, R>> mr(final Object obj, final int size, final Method m, final String name) {
+    private static String branch(final Method m, final Pull pull, final Class<?>[] params) {
+        String branch = null;
+
+        if (pull.value().isEmpty()) {
+
+            if (Action.class.isAssignableFrom(params[0])) {
+
+                final List<String> generics = generics(m);
+
+                isTure(!generics.isEmpty(), "action generics must not be null");
+
+                branch = generics.get(0);
+            } else {
+                branch = params[0].getName();
+            }
+
+        } else {
+            branch = pull.value();
+        }
+
+        return branch;
+    }
+
+    private Merge<Action<C, R>> mr(final Object obj, final Method m, final Class<?>[] params, final String name) {
         return new Merge<Action<C, R>>() {
             @Override
             public String name() {
@@ -87,20 +106,32 @@ public final class HubImpl<C, R> implements Hub<C, R> {
 
             @Override
             public void merge(final Action<C, R> action) throws Exception {
-                final Object fr;
+                final Object[] args = new Object[params.length];
 
-                if (size == 1) {
-                    fr = m.invoke(obj, action.content());
-                } else {
-                    fr = m.invoke(obj);
+                if (params.length == 1) {
+
+                    if (Action.class.isAssignableFrom(params[0])) {
+                        args[0] = action;
+                    } else {
+                        args[0] = action.content();
+                    }
+
                 }
 
-                if (void.class.isAssignableFrom(m.getReturnType()) || Void.class.isAssignableFrom(m.getReturnType())) {
-                    return;
-                }
+                final Object fr = m.invoke(obj, args);
 
-                action.res((R) fr);
+                if (action.hasCallBack()) {
+                    action.res((R) fr);
+                }
             }
         };
+    }
+
+    @Override
+    public void remove(final String branch, final String name) {
+        notNull(branch, "branch must not be null");
+        notNull(name, "name must not be null");
+
+        ofNullable(repo.get(branch)).ifPresent(ms -> ms.removeIf(m -> Objects.equals(m.name(), name)));
     }
 }
